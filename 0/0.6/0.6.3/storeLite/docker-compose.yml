@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: storelite-backend
+    environment:
+      - SENTRY_DSN=${SENTRY_DSN}
+      - FRONTEND_URL=${FRONTEND_URL}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  frontend:
+    build: ./frontend
+    container_name: storelite-frontend
+    environment:
+      - VITE_SENTRY_DSN=${SENTRY_DSN}
+      - VITE_API_URL=${BACKEND_URL}
+    ports:
+      - "5173:5173"
+
+  redis:
+    image: redis:alpine
+    container_name: storelite-redis
+    ports:
+      - "6379:6379"
