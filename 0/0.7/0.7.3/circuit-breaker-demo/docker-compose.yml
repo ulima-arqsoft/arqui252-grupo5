@@ -1,9 +1,28 @@
-version: '3.8'
+version: "3.8"
 services:
-  payments-api:
-    build: .
-    container_name: payments-api
+  backend:
+    build: ./backend
+    container_name: circuit_backend
     ports:
       - "3000:3000"
-    env_file: .env
-    restart: always
+    env_file:
+      - ./backend/.env
+    command: ["node", "server.js"]
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: circuit_frontend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    env_file:
+    - ./frontend/.env
+
+networks:
+  app-network:
+    driver: bridge
