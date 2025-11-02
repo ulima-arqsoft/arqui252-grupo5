@@ -4,8 +4,7 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import axios from "axios";
 
 const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
-
-const stripePromise = loadStripe(stripePublicKey); // tu clave pública de Stripe
+const stripePromise = loadStripe(stripePublicKey);
 
 function CheckoutForm() {
   const stripe = useStripe();
@@ -18,10 +17,15 @@ function CheckoutForm() {
     setMessage("");
 
     try {
-      const { data } = await axios.post("http://localhost:3000/api/create-payment-intent", {
-        amount,
-      });
+      const { data } = await axios.post("http://localhost:3000/api/create-payment-intent", { amount });
 
+      // ⚙️ Si estamos en modo fallback (Stripe no disponible)
+      if (data.fallback) {
+        setMessage("⚙️ Servicio de pagos no disponible. Simulación activada.");
+        return;
+      }
+
+      // ⚡ Pago real con Stripe
       const { clientSecret } = data;
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -42,7 +46,7 @@ function CheckoutForm() {
   return (
     <form onSubmit={handleSubmit} style={{ width: "300px", margin: "auto" }}>
       <h2>💳 Pago con Stripe</h2>
-      <label>Monto (soles):</label>
+      <label>Monto (USD):</label>
       <input
         type="number"
         value={amount}
