@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  payments-api:
+    build: .
+    container_name: payments-api
+    ports:
+      - "3000:3000"
+    env_file: .env
+    restart: always
