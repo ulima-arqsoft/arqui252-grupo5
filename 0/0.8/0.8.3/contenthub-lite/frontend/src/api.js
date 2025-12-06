@@ -8,10 +8,10 @@ export async function fetchArticles() {
     }
   });
   const data = await res.json();
-  return data; // devuelve { data: [...], meta: {...} }
+  return data; 
 }
 
-// Fetch artículo por ID usando el find + filter
+
 export async function fetchArticle(id) {
   const res = await fetch(`${API_URL}/articles?filters[id][$eq]=${id}`, {
     headers: {
@@ -19,6 +19,6 @@ export async function fetchArticle(id) {
     },
   });
   const data = await res.json();
-  // Devuelve el primer artículo que coincida con el id
+
   return data.data[0] || null;
 }

@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchArticles().then((data) => {
-      // data.data es el array que Strapi te devuelve
+      
       setArticles(data.data || []);
     });
   }, []);
